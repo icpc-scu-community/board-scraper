@@ -14,5 +14,6 @@ export const Submission = mongoose.model("Submission", new mongoose.Schema({
 export const Contest = mongoose.model("Contest", new mongoose.Schema({
     id: { type: String },
     endPage: { type: Number },
-    lastParsedPage: { type: Number }
+    lastParsedPage: { type: Number },
+    lastParsedSubmission: { type: Number },
 }));
