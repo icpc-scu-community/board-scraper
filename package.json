@@ -2,18 +2,25 @@
   "name": "newcomers-board-scraper",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node src",
-    "dev": "nodemon src"
+    "start": "node .",
+    "dev": "nodemon --config .nodemonrc",
+    "build": "tsc",
+    "lint": "eslint . --ext .js,.ts",
+    "typecheck": "tsc --noEmit -p ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "mongoose": "^5.8.11",
     "puppeteer": "^2.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "@types/mongoose": "^5.7.0",
+    "@types/puppeteer": "^2.0.0",
+    "nodemon": "^2.0.2",
+    "typescript": "^3.7.5"
   }
 }
