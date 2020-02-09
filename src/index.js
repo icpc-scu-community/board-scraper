@@ -29,9 +29,14 @@ const contests = [
         rows.forEach(row => {
           const columns = row.querySelectorAll('td');
           output.push({
+            id: columns[0].innerText,
+            date: columns[1].innerText,
             name: columns[2].innerText,
             problem: columns[3].innerText,
-            verdict: columns[5].innerText
+            lang: columns[4].innerText,
+            verdict: columns[5].innerText,
+            time: columns[6].innerText,
+            memory: columns[7].innerText
           });
         });
         return output;
