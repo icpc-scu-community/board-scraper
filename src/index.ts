@@ -6,7 +6,8 @@ import { ContestParser } from './ContestParser';
 mongoose
   .connect("mongodb://localhost/newcomers", {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
   })
   .catch(function (err) {
     if (err) console.log(err);

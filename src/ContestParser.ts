@@ -1,5 +1,5 @@
 import { Browser } from "puppeteer";
-import { Submission } from "./models";
+import { Submission, Contest } from "./models";
 
 export class ContestParser {
   private _main_link: string;
@@ -12,7 +12,7 @@ export class ContestParser {
     return `https://codeforces.com/group/MWSDmqGsZm/contest/${this._codeforces_contest_id}/status/page/${page_number}?order=BY_ARRIVED_ASC`;
   }
 
-  private async getLastPage() {
+  private async getEndPage() {
     const page = await this._browser.newPage();
     await page.goto(this._main_link, {
       waitUntil: "domcontentloaded"
@@ -57,9 +57,12 @@ export class ContestParser {
         });
         return output;
       });
-      submissions.forEach((submission) => {
+      submissions.forEach(async (submission) => {
+        submission['contest_id'] = this._codeforces_contest_id;
         const sub = new Submission(submission);
-        sub.save();
+        try {
+          await sub.save();
+        } catch (err) { console.log(err.errmsg) };
       })
 
     } catch (error) {
@@ -69,17 +72,27 @@ export class ContestParser {
   }
 
   async parseAll() {
-    // const contest_doc = await Contest.find({ id: this._codeforces_contest_id });
-    // if (contest_doc) {
 
-    // } else {
+    let pageNumber = 1
+    const endPage = await this.getEndPage();
+    let contest_doc = await Contest.findOne({ id: this._codeforces_contest_id });
 
-    // }
-    let pageNumber = 1; // the start page number should be calculated according to lastParsedPage
-    const lastPage = await this.getLastPage();
-    console.log(`[] Parsing contest ${this._codeforces_contest_id} (has ${lastPage} page(s))`);
-    for (; pageNumber <= lastPage; pageNumber++) {
+    console.log(`[] Parsing contest ${this._codeforces_contest_id} (has ${endPage} page(s))`);
+
+    if (contest_doc) {
+      pageNumber = contest_doc.get("lastParsedPage");
+      console.log(`\Last parsed page: ${pageNumber}`)
+    } else {
+      contest_doc = new Contest({
+        id: this._codeforces_contest_id,
+        endPage,
+      });
+    }
+    console.log(`\tStarting from: ${pageNumber}, to: ${endPage}`);
+    for (; pageNumber <= endPage; pageNumber++) {
       await this.parsePage(pageNumber);
+      contest_doc.set('lastParsedPage', pageNumber);
+      await contest_doc.save();
     }
 
   }
