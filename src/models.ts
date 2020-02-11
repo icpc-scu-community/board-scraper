@@ -17,3 +17,7 @@ export const Contest = mongoose.model("Contest", new mongoose.Schema({
   endPage: { type: Number },
   lastParsedPage: { type: Number },
 }));
+
+export const Scraper = mongoose.model("Scraper", new mongoose.Schema({
+  lastUpdate: { type: Date, default: Date.now }
+}))
