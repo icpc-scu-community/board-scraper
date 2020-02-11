@@ -73,7 +73,7 @@ export class ContestParser {
 
     page.close();
     submissions.forEach(async (submission) => {
-      submission['contest_id'] = this._codeforces_contest_id;
+      submission['contestId'] = this._codeforces_contest_id;
       const sub = new Submission(submission);
       try {
         await sub.save();

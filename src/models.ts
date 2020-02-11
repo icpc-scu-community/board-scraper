@@ -9,7 +9,7 @@ export const Submission = mongoose.model("Submission", new mongoose.Schema({
   verdict: { type: String },
   time: { type: String },
   memory: { type: String },
-  contest_id: { type: String }, // codeforces contest id
+  contestId: { type: String }, // codeforces contest id
 }));
 
 export const Contest = mongoose.model("Contest", new mongoose.Schema({
