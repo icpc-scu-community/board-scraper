@@ -19,7 +19,7 @@ console.log(contests);
   const browser = await puppeteer.launch({ headless: false, timeout: 0 });
 
   for (let i = 0; i < contests.length; i++) {
-    const contestParser = new ContestParser(contests[i].id, browser);
+    const contestParser = new ContestParser(contests[i], browser);
     await contestParser.parseAll();
   }
 
