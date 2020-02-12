@@ -19,5 +19,5 @@ export const Contest = mongoose.model("Contest", new mongoose.Schema({
 }));
 
 export const Scraper = mongoose.model("Scraper", new mongoose.Schema({
-  lastUpdate: { type: Date, default: Date.now }
-}))
+  lastUpdate: { type: Number, default: Date.now }
+}, { capped: { max: 1, size: 1024 } }));

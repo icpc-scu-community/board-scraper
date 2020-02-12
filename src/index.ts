@@ -16,7 +16,7 @@ mongoose
 
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: false, timeout: 0 });
+  const browser = await puppeteer.launch({ headless: true, timeout: 0 });
 
   console.log(`[] Scraper Started @${new Date()}`);
   console.log(`[] Parsing ${contests.length} contest(s)`);
@@ -27,15 +27,9 @@ mongoose
   }
 
   await browser.close();
+  
+  const scraper = new Scraper();
+  await scraper.save();
 
   console.log(`[] Scraper Finished @${new Date()}`);
-
-  let scraper = await Scraper.findOne();
-  if (scraper) {
-    scraper.set('lastUpdate', new Date());
-  } else {
-    scraper = new Scraper();
-  }
-  
-  await scraper.save();
 })();
