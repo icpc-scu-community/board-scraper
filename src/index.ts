@@ -26,9 +26,10 @@ mongoose
   console.log(`[ 🛫 ] Scraper Started ${chalk.yellowBright(startTime.toLocaleTimeString())}`)
   console.log(`[ ${logSymbols.info} ] Parsing ${chalk.blueBright(contests.length)} contest(s)`);
 
+  let totalParsedSubmissions = 0;
   for (let i = 0; i < contests.length; i++) {
     const contestParser = new ContestParser(contests[i], browser);
-    await contestParser.parseAll();
+    totalParsedSubmissions += await contestParser.parseAll();
   }
 
   await browser.close();
@@ -39,7 +40,7 @@ mongoose
   const endTime = new Date();
   const takenTime = endTime.getTime() - startTime.getTime();
   console.log(`[ 🛬 ] Scraper Finished ${chalk.yellowBright(endTime.toLocaleTimeString())}`);
-  console.log(`[ 🕑 ] ${chalk.cyanBright(calculateTime(takenTime))}`)
+  console.log(`[ 🕑 ] Took ${chalk.cyanBright(calculateTime(takenTime))} ~ Total added ${chalk.cyan(totalParsedSubmissions)}`)
   process.exit(0);
 })();
 
