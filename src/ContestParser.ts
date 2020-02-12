@@ -8,9 +8,11 @@ const DUPLICATE_ID_CODE = 11000;
 
 export class ContestParser {
   private _main_link: string;
+  private _new_docs: number;
 
   constructor(private _codeforces_contest_id: string, private _browser: Browser) {
     this._main_link = this.formulateLink();
+    this._new_docs = 0;
   }
 
   private formulateLink(page_number = 1) {
@@ -50,7 +52,7 @@ export class ContestParser {
     let submissions: sub_t[] = [];
     let containsPendingSubmissions = false;
     try {
-      ({ submissions, containsPendingSubmissions } = await page.evaluate(() => {
+      ({ submissions, containsPendingSubmissions } = await page.evaluate((contestId) => {
         const SUBMISSIONS_TABLE_SELECTOR = ".status-frame-datatable > tbody tr:not(:first-of-type)";
         const containsPendingSubmissions = !!document.querySelector(`${SUBMISSIONS_TABLE_SELECTOR} > td[waiting=true]`)
         const rows = document.querySelectorAll(SUBMISSIONS_TABLE_SELECTOR);
@@ -58,7 +60,9 @@ export class ContestParser {
 
         const submissions = containsPendingSubmissions ? [] : Array.from(rows).map(row => {
           const columns = row.querySelectorAll("td");
-          const submission: sub_t = {};
+          const submission: sub_t = {
+            contestId
+          };
           for (let i = 0; i < attrs.length; i++) {
             const attr_name = attrs[i];
             submission[attr_name] = columns[i].innerText;
@@ -67,24 +71,28 @@ export class ContestParser {
         });
         return { submissions, containsPendingSubmissions }
 
-      }));
+      }, this._codeforces_contest_id));
     } catch (error) {
       console.error(error);
     }
 
-
     page.close();
-    submissions.forEach(async (submission) => {
-      submission['contestId'] = this._codeforces_contest_id;
-      const sub = new Submission(submission);
-      try {
-        await sub.save();
-      } catch (err) { if (err.code != DUPLICATE_ID_CODE) console.log(err) };
-    })
+
+    try {
+      const docs = await Submission.insertMany(submissions, { ordered: false }); // "ordered:false" => don't stop inserting on first error
+      this._new_docs += docs.length;
+    } catch (err) {
+      if (err.code != DUPLICATE_ID_CODE)
+        console.log(err)
+      this._new_docs += err.result.result.nInserted;
+    }
     return containsPendingSubmissions;
   }
 
-  async parseAll() {
+  /**
+   * parses all pages in a contest and returns the number of new-added-docs
+   */
+  async parseAll(): Promise<number> {
 
     let pageNumber = 1
     const endPage = await this.getEndPage();
@@ -102,17 +110,17 @@ export class ContestParser {
 
     const cli = ora({ prefixText: '[' }).start();
     for (; pageNumber <= endPage; pageNumber++) {
-      cli.text = `] Parsing contest ${this._codeforces_contest_id} on page ${pageNumber}/${endPage}`;
+      cli.text = `] Parsing contest ${this._codeforces_contest_id} on page ${pageNumber}/${endPage} ~ Added (${this._new_docs})`;
       const hasPendingSubmissions = await this.parsePage(pageNumber);
       if (hasPendingSubmissions) {
-        cli.warn(`] Pausing - pending submissions on contest ${this._codeforces_contest_id}!`)
-        return;
+        cli.warn(`] Pausing - pending submissions on contest ${this._codeforces_contest_id}! ~ Added ${this._new_docs}`)
+        return this._new_docs;
       }
       contest_doc.set('lastParsedPage', pageNumber);
       await contest_doc.save();
     }
-    cli.succeed('] ' + chalk.greenBright(`Parsed Contest ${this._codeforces_contest_id}`));
-
+    cli.succeed('] ' + chalk.greenBright(`Parsed Contest ${this._codeforces_contest_id} ~ Added ${this._new_docs}`));
+    return this._new_docs;
   }
 }
 
