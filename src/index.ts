@@ -2,10 +2,14 @@ import puppeteer from "puppeteer";
 import mongoose from "mongoose";
 import { contests } from "./data.json";
 import { ContestParser } from './ContestParser';
-import { Scraper } from "./models.js";
+import { Scraper } from "./models";
+import logSymbols from 'log-symbols';
+import chalk from "chalk";
+
+const MONGO_URL = 'mongodb://localhost/newcomers-board';
 
 mongoose
-  .connect("mongodb://localhost/newcomers", {
+  .connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
@@ -14,12 +18,13 @@ mongoose
     if (err) console.log(err);
   });
 
-
 (async () => {
+  console.log(`[ 🚀 ] Launching browser`)
   const browser = await puppeteer.launch({ headless: true, timeout: 0 });
 
-  console.log(`[] Scraper Started @${new Date()}`);
-  console.log(`[] Parsing ${contests.length} contest(s)`);
+  const startTime = new Date();
+  console.log(`[ 🛫 ] Scraper Started ${chalk.yellowBright(startTime.toLocaleTimeString())}`)
+  console.log(`[ ${logSymbols.info} ] Parsing ${chalk.blueBright(contests.length)} contest(s)`);
 
   for (let i = 0; i < contests.length; i++) {
     const contestParser = new ContestParser(contests[i], browser);
@@ -27,9 +32,23 @@ mongoose
   }
 
   await browser.close();
-  
+
   const scraper = new Scraper();
   await scraper.save();
 
-  console.log(`[] Scraper Finished @${new Date()}`);
+  const endTime = new Date();
+  const takenTime = endTime.getTime() - startTime.getTime();
+  console.log(`[ 🛬 ] Scraper Finished ${chalk.yellowBright(endTime.toLocaleTimeString())}`);
+  console.log(`[ 🕑 ] ${chalk.cyanBright(calculateTime(takenTime))}`)
+  process.exit(0);
 })();
+
+function calculateTime(distance: number) {
+
+  const hours = Math.floor(
+    (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  return `${hours}h ${minutes}m ${seconds}s`;
+}

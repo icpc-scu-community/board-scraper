@@ -1,7 +1,10 @@
 import { Browser } from "puppeteer";
 import { Submission, Contest } from "./models";
+import ora from 'ora';
+import chalk from "chalk";
 
 type sub_t = { [key: string]: string };
+const DUPLICATE_ID_CODE = 11000;
 
 export class ContestParser {
   private _main_link: string;
@@ -38,7 +41,6 @@ export class ContestParser {
   * parses the page and returns whether it has pendening submissions
   */
   private async parsePage(page_number: number): Promise<boolean> {
-    console.log(`\t@page #${page_number}`)
     const page = await this._browser.newPage();
     await page.goto(
       this.formulateLink(page_number),
@@ -77,7 +79,7 @@ export class ContestParser {
       const sub = new Submission(submission);
       try {
         await sub.save();
-      } catch (err) { console.log(err.errmsg) };
+      } catch (err) { if (err.code != DUPLICATE_ID_CODE) console.log(err) };
     })
     return containsPendingSubmissions;
   }
@@ -88,27 +90,28 @@ export class ContestParser {
     const endPage = await this.getEndPage();
     let contest_doc = await Contest.findOne({ id: this._codeforces_contest_id });
 
-    console.log(`[] Parsing contest ${this._codeforces_contest_id} (has ${endPage} page(s))`);
-
     if (contest_doc) {
       pageNumber = contest_doc.get("lastParsedPage");
-      console.log(`\Last parsed page: ${pageNumber}`)
+
     } else {
       contest_doc = new Contest({
         id: this._codeforces_contest_id,
         endPage,
       });
     }
-    console.log(`\tStarting from: ${pageNumber}, to: ${endPage}`);
+
+    const cli = ora({ prefixText: '[' }).start();
     for (; pageNumber <= endPage; pageNumber++) {
+      cli.text = `] Parsing contest ${this._codeforces_contest_id} on page ${pageNumber}/${endPage}`;
       const hasPendingSubmissions = await this.parsePage(pageNumber);
       if (hasPendingSubmissions) {
-        console.log("\tPausing parsing because of pending submissions!");
-        break;
+        cli.warn(`] Pausing - pending submissions on contest ${this._codeforces_contest_id}!`)
+        return;
       }
       contest_doc.set('lastParsedPage', pageNumber);
       await contest_doc.save();
     }
+    cli.succeed('] ' + chalk.greenBright(`Parsed Contest ${this._codeforces_contest_id}`));
 
   }
 }
