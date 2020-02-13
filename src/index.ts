@@ -21,9 +21,10 @@ mongoose
 (async () => {
   console.log(`[ 🚀 ] Launching browser`)
   const browser = await puppeteer.launch({ headless: true, timeout: 0 });
-
+  const lastUpdatedDate = new Date((await Scraper.findOne())?.get('lastUpdate')).toLocaleString();
   const startTime = new Date();
   console.log(`[ 🛫 ] Scraper Started ${chalk.yellowBright(startTime.toLocaleTimeString())}`)
+  console.log(`[ ⏲ ] Last Updated  ${chalk.yellowBright(lastUpdatedDate)}`);
   console.log(`[ ${logSymbols.info} ] Parsing ${chalk.blueBright(contests.length)} contest(s)`);
 
   let totalParsedSubmissions = 0;
