@@ -1,3 +1,4 @@
+require('dotenv').config()
 import puppeteer from "puppeteer";
 import mongoose from "mongoose";
 import { contests } from "./data.json";
@@ -6,7 +7,7 @@ import { Scraper } from "./models";
 import logSymbols from 'log-symbols';
 import chalk from "chalk";
 
-const MONGO_URL = 'mongodb://localhost/newcomers-board';
+const MONGO_URL = process.env["MONGO_URL"] || 'mongodb://localhost/newcomers-board'
 
 mongoose
   .connect(MONGO_URL, {
