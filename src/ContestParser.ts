@@ -76,7 +76,7 @@ export class ContestParser {
       console.error(error);
     }
 
-    page.close();
+    await page.close();
 
     try {
       const docs = await Submission.insertMany(submissions, { ordered: false }); // "ordered:false" => don't stop inserting on first error
