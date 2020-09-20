@@ -29,3 +29,17 @@ export const Scraper = mongoose.model(
     { capped: { max: 1, size: 1024 } },
   ),
 );
+
+export const Sheet = mongoose.model(
+  'Sheet',
+  new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    problems: [
+      {
+        id: String,
+        name: String,
+      },
+    ],
+  }),
+);
