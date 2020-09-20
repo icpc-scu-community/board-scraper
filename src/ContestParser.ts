@@ -1,12 +1,27 @@
 import cheerio from 'cheerio';
 import got from 'got';
+import logSymbols from 'log-symbols';
 import { Contest, Submission } from './models';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Spinnies = require('spinnies');
-const spinnies = new Spinnies();
+const spinnies = new Spinnies({ succeedPrefix: `[ ${logSymbols.success} ]`, failPrefix: `[ ${logSymbols.error} ]` });
 
-const DUPLICATE_ID_CODE = 11000;
+export const DUPLICATE_ID_CODE = 11000;
 const SUBMISSION_ATTRIBUTES = ['id', 'date', 'name', 'problem', 'lang', 'verdict', 'time', 'memory'];
+
+/**
+ * @returns Cheerio instance to query the html response of the url
+ * @param url the url to the page you want to crawl
+ */
+export async function crawl(url: string): Promise<CheerioStatic> {
+  try {
+    const response = await got(url);
+    return cheerio.load(response.body);
+  } catch (e) {
+    console.error(e);
+    process.exit(-1);
+  }
+}
 
 export class ContestParser {
   private _main_link: string;
@@ -21,22 +36,8 @@ export class ContestParser {
     return `https://codeforces.com/group/MWSDmqGsZm/contest/${this._codeforces_contest_id}/status/page/${page_number}?order=BY_ARRIVED_ASC`;
   }
 
-  /**
-   * @returns Cheerio instance to query the html response of the url
-   * @param url the url to the page you want to crawl
-   */
-  private async crawl(url: string): Promise<CheerioStatic> {
-    try {
-      const response = await got(url);
-      return cheerio.load(response.body);
-    } catch (e) {
-      console.error(e);
-      process.exit(-1);
-    }
-  }
-
   public async getEndPage(): Promise<number> {
-    const $ = await this.crawl(this._main_link);
+    const $ = await crawl(this._main_link);
     return parseInt($('[pageindex]').last().attr('pageindex') || '1');
   }
 
@@ -56,7 +57,7 @@ export class ContestParser {
    */
   private async parsePage(page_number: number): Promise<boolean> {
     const url = this.formulateLink(page_number);
-    const $ = await this.crawl(url);
+    const $ = await crawl(url);
     const getSubmissions = () => {
       const rows = $('tr[data-submission-id]');
       return rows
