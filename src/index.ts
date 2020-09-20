@@ -1,32 +1,18 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
-import mongoose from 'mongoose';
 import { ContestParser } from './ContestParser';
 import { contests } from './data.json';
 import { Scraper } from './models';
-
-const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost/newcomers-board';
+import { connectToMongo } from './mongoConnect';
 
 (async () => {
-  try {
-    await mongoose.connect(MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
-    console.log(`[ 💽 ] Connected to MongoDB`);
-  } catch (e) {
-    console.error(e.message);
-    process.exit(-1);
-  }
+  await connectToMongo();
 
   const startTime = new Date();
   console.log(`[ 🛫 ] Scraper Started ${chalk.yellowBright(startTime.toLocaleTimeString())}`);
   const lastUpdate = (await Scraper.findOne())?.get('lastUpdate');
   const lastUpdatedDate = lastUpdate ? new Date(lastUpdate).toLocaleString() : 'N/A - First run';
-  console.log(`[ ⏲ ] Last Updated ${chalk.yellowBright(lastUpdatedDate)}`);
+  console.log(`[ 🌀 ] Last Updated ${chalk.yellowBright(lastUpdatedDate)}`);
   console.log(`[ ${logSymbols.info} ] Parsing ${chalk.blueBright(contests.length)} contest(s)`);
 
   const contestParsers = contests.map((contest) => new ContestParser(contest).parseAll());
