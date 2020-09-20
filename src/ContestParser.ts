@@ -1,27 +1,9 @@
-import cheerio from 'cheerio';
-import got from 'got';
-import logSymbols from 'log-symbols';
 import { Contest, Submission } from './models';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Spinnies = require('spinnies');
-const spinnies = new Spinnies({ succeedPrefix: `[ ${logSymbols.success} ]`, failPrefix: `[ ${logSymbols.error} ]` });
+import { crawl, createSpinnies } from './utils';
 
 export const DUPLICATE_ID_CODE = 11000;
 const SUBMISSION_ATTRIBUTES = ['id', 'date', 'name', 'problem', 'lang', 'verdict', 'time', 'memory'];
-
-/**
- * @returns Cheerio instance to query the html response of the url
- * @param url the url to the page you want to crawl
- */
-export async function crawl(url: string): Promise<CheerioStatic> {
-  try {
-    const response = await got(url);
-    return cheerio.load(response.body);
-  } catch (e) {
-    console.error(e);
-    process.exit(-1);
-  }
-}
+const spinnies = createSpinnies();
 
 export class ContestParser {
   private _main_link: string;

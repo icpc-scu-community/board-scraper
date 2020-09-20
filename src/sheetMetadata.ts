@@ -1,11 +1,10 @@
-import { crawl, DUPLICATE_ID_CODE } from './ContestParser';
+import { DUPLICATE_ID_CODE } from './ContestParser';
 import { Sheet } from './models';
 import { connectToMongo } from './mongoConnect';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Spinnies = require('spinnies');
-const spinnies = new Spinnies();
+import { crawl, createSpinnies } from './utils';
 
 const CHAR_CODE = 'A'.charCodeAt(0);
+const spinnies = createSpinnies();
 
 interface IContest {
   id: string;
@@ -44,12 +43,13 @@ interface IContest {
   // fs.writeFileSync('sheets.json', JSON.stringify(sheets));
   try {
     spinnies.add('DB', { text: 'Inserting documents into DB' });
-    const docs = await Sheet.insertMany(sheets, { ordered: false });
-    console.log('inserted', docs.length);
+    await Sheet.insertMany(sheets, { ordered: false });
   } catch (err) {
     if (err.code != DUPLICATE_ID_CODE) console.error(err);
   }
   spinnies.succeed('DB');
+  console.log('[ 💛 ] Bye!');
+  process.exit(0);
 })();
 
 async function parseProblems(contest_id: string) {
