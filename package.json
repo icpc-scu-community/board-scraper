@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "node .",
-    "seetMetadata:start": "node dist/sheetMetadata.js",
+    "sheetMetadata:start": "node dist/sheetMetadata.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "sheetMetadata:dev": "ts-node-dev --respawn --transpile-only src/sheetMetadata.ts",
     "build": "tsc",
