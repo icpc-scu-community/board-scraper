@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "main": "dist/index.js",
   "repository": {
-    "url": "https://github.com/SCU-ICPC-Community/board-scraper"
+    "url": "https://github.com/icpc-scu-community/board-scraper"
   },
   "scripts": {
     "start": "node .",
