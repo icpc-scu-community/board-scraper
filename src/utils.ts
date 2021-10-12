@@ -10,7 +10,7 @@ export function createSpinnies(): Spinnies {
  * @returns Cheerio to query the html response of the url
  * @param url the url of the page you want to crawl
  */
-export async function crawl(url: string): Promise<CheerioStatic> {
+export async function crawl(url: string): Promise<cheerio.Root> {
   try {
     const response = await got(url);
     return cheerio.load(response.body);
