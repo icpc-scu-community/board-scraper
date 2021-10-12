@@ -1,10 +1,9 @@
 import cheerio from 'cheerio';
 import got from 'got';
-import logSymbols from 'log-symbols';
 import Spinnies from 'spinnies';
 
 export function createSpinnies(): Spinnies {
-  return new Spinnies({ succeedPrefix: `[ ${logSymbols.success} ]`, failPrefix: `[ ${logSymbols.error} ]` });
+  return new Spinnies({ succeedPrefix: '[ ✔ ]', failPrefix: '[ ✖ ]' });
 }
 
 /**

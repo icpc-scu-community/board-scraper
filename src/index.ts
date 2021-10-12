@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import logSymbols from 'log-symbols';
 import { ContestParser } from './ContestParser';
 import { contests } from './data.json';
 import { Scraper } from './models';
@@ -13,7 +12,7 @@ import { connectToMongo } from './mongoConnect';
   const lastUpdate = (await Scraper.findOne())?.get('lastUpdate');
   const lastUpdatedDate = lastUpdate ? new Date(lastUpdate).toLocaleString() : 'N/A - First run';
   console.log(`[ 🌀 ] Last Updated ${chalk.yellowBright(lastUpdatedDate)}`);
-  console.log(`[ ${logSymbols.info} ] Parsing ${chalk.blueBright(contests.length)} contest(s)`);
+  console.log(`[ ❗ ] Parsing ${chalk.blueBright(contests.length)} contest(s)`);
 
   const contestParsers = contests.map((contest) => new ContestParser(contest).parseAll());
   const parsedSubmissions = await Promise.all(contestParsers);
