@@ -3,12 +3,19 @@ import Spinnies from 'spinnies';
 export function createSpinnies(): Spinnies {
   return new Spinnies({ succeedPrefix: '[ ✔ ]', failPrefix: '[ ✖ ]' });
 }
-
 export default class Logger {
+  private static instance: Logger;
   private spinnies: Spinnies;
 
-  constructor(spinniesOptions: Spinnies.Options = { succeedPrefix: '[ ✔ ]', failPrefix: '[ ✖ ]' }) {
-    this.spinnies = new Spinnies(spinniesOptions);
+  private constructor() {
+    this.spinnies = new Spinnies({ succeedPrefix: '[ ✔ ]', failPrefix: '[ ✖ ]' });
+  }
+
+  public static get(): Logger {
+    if (!this.instance) {
+      this.instance = new Logger();
+    }
+    return this.instance;
   }
 
   public log(event: string, message?: string): void {
