@@ -3,7 +3,7 @@ require('dotenv').config();
 import { DUPLICATE_ID_CODE } from './ContestParser';
 import { Sheet } from './models';
 import { openMongooseConnection } from './database/mongoose-connection';
-import { crawl } from './utils';
+import { crawl } from './utils/crawler';
 import Logger from './utils/logger';
 
 const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost/newcomers-board';
