@@ -3,11 +3,12 @@ require('dotenv').config();
 import { DUPLICATE_ID_CODE } from './ContestParser';
 import { Sheet } from './models';
 import { openMongooseConnection } from './database/mongoose-connection';
-import { crawl, createSpinnies } from './utils';
+import { crawl } from './utils';
+import Logger from './utils/logger';
 
 const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost/newcomers-board';
 const CHAR_CODE = 'A'.charCodeAt(0);
-const spinnies = createSpinnies();
+const logger = Logger.get();
 
 interface IContest {
   id: string;
@@ -21,9 +22,9 @@ interface IContest {
 (async () => {
   await openMongooseConnection(MONGO_URL);
   const url = 'https://codeforces.com/group/MWSDmqGsZm/contests';
-  spinnies.add('contests', { text: `Parsing contests page [${url}]` });
+  logger.log('contests', `Parsing contests page [${url}]`);
   const $ = await crawl(url);
-  spinnies.succeed('contests');
+  logger.success('contests');
   const contests_names = $('[data-contestid]')
     .children('td')
     .map((_, el) => $(el).text().split('\n'))
@@ -45,24 +46,24 @@ interface IContest {
   // write data to file
   // fs.writeFileSync('sheets.json', JSON.stringify(sheets));
   try {
-    spinnies.add('DB', { text: 'Inserting documents into DB' });
+    logger.log('DB', 'Inserting documents into DB');
     await Sheet.insertMany(sheets, { ordered: false });
   } catch (err) {
     if (err.code != DUPLICATE_ID_CODE) console.error(err);
   }
-  spinnies.succeed('DB');
+  logger.success('DB');
   console.log('[ 💛 ] Bye!');
   process.exit(0);
 })();
 
 async function parseProblems(contest_id: string) {
-  spinnies.add(contest_id, { text: 'Parsing problems in contest #' + contest_id });
+  logger.log(contest_id, `Parsing problems in contest #${contest_id}`);
   const $ = await crawl(`https://codeforces.com/group/MWSDmqGsZm/contest/${contest_id}`);
   const problems = $('.problems')
     .find('td:nth-child(2)')
     .find('a')
     .map((index, el) => ({ name: $(el).text(), id: String.fromCharCode(CHAR_CODE + index) }))
     .get();
-  spinnies.succeed(contest_id);
+  logger.success(contest_id);
   return problems;
 }

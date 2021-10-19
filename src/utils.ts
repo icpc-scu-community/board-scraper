@@ -1,10 +1,5 @@
 import cheerio from 'cheerio';
 import got from 'got';
-import Spinnies from 'spinnies';
-
-export function createSpinnies(): Spinnies {
-  return new Spinnies({ succeedPrefix: '[ ✔ ]', failPrefix: '[ ✖ ]' });
-}
 
 /**
  * @returns Cheerio to query the html response of the url
