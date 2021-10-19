@@ -11,7 +11,7 @@ export async function openMongooseConnection(uri: string): Promise<void> {
     await mongoose.connect(uri);
     logger.success(OPEN_CONNECTION_EVENT, `Succesfuly connected to MongoDB with URI: ${uri}.`);
   } catch (e) {
-    logger.error(OPEN_CONNECTION_EVENT, `Failed to connect to MongoDB with URI: ${uri}.\n${e}`);
+    logger.fail(OPEN_CONNECTION_EVENT, `Failed to connect to MongoDB with URI: ${uri}.\n${e}`);
     process.exit(1);
   }
 }
@@ -22,7 +22,7 @@ export async function closeMongooseConnection(): Promise<void> {
     await mongoose.disconnect();
     logger.success(CLOSE_CONNECTION_EVENT, `Succesfuly disconnected from MongoDB.`);
   } catch (e) {
-    logger.error(CLOSE_CONNECTION_EVENT, `Failed to disconnect from MongoDB.\n${e}`);
+    logger.fail(CLOSE_CONNECTION_EVENT, `Failed to disconnect from MongoDB.\n${e}`);
     process.exit(1);
   }
 }

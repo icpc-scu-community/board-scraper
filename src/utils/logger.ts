@@ -27,7 +27,7 @@ export default class Logger {
     this.spinnies.succeed(event, { text: message });
   }
 
-  public error(event: string, message?: string): void {
+  public fail(event: string, message?: string): void {
     if (!this.spinnies.pick(event)) this.log(event, message);
     this.spinnies.fail(event, { text: message });
   }
