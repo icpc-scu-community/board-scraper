@@ -4,7 +4,6 @@ import Logger from './utils/logger';
 
 export const DUPLICATE_ID_CODE = 11000;
 const SUBMISSION_ATTRIBUTES = ['id', 'date', 'name', 'problem', 'lang', 'verdict', 'time', 'memory'];
-const logger = Logger.get();
 
 export class ContestParser {
   private _main_link: string;
@@ -88,19 +87,19 @@ export class ContestParser {
     }
 
     for (; pageNumber <= endPage; pageNumber++) {
-      logger.log(
+      Logger.log(
         contest_id,
         `Parsing contest ${contest_id} on page ${pageNumber}/${endPage} ~ Added (${this._new_docs})`,
       );
       const hasPendingSubmissions = await this.parsePage(pageNumber);
       if (hasPendingSubmissions) {
-        logger.fail(contest_id, `Pausing - pending submissions on contest ${contest_id}! ~ Added ${this._new_docs}`);
+        Logger.fail(contest_id, `Pausing - pending submissions on contest ${contest_id}! ~ Added ${this._new_docs}`);
         return this._new_docs;
       }
       contest_doc.set('lastParsedPage', pageNumber);
       await contest_doc.save();
     }
-    logger.success(contest_id, `Parsed Contest ${contest_id} ~ Added ${this._new_docs}`);
+    Logger.success(contest_id, `Parsed Contest ${contest_id} ~ Added ${this._new_docs}`);
     return this._new_docs;
   }
 }

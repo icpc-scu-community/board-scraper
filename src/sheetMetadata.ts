@@ -8,7 +8,6 @@ import Logger from './utils/logger';
 
 const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost/newcomers-board';
 const CHAR_CODE = 'A'.charCodeAt(0);
-const logger = Logger.get();
 
 interface IContest {
   id: string;
@@ -22,9 +21,9 @@ interface IContest {
 (async () => {
   await openMongooseConnection(MONGO_URL);
   const url = 'https://codeforces.com/group/MWSDmqGsZm/contests';
-  logger.log('contests', `Parsing contests page [${url}]`);
+  Logger.log('contests', `Parsing contests page [${url}]`);
   const $ = await crawl(url);
-  logger.success('contests');
+  Logger.success('contests');
   const contests_names = $('[data-contestid]')
     .children('td')
     .map((_, el) => $(el).text().split('\n'))
@@ -46,24 +45,24 @@ interface IContest {
   // write data to file
   // fs.writeFileSync('sheets.json', JSON.stringify(sheets));
   try {
-    logger.log('DB', 'Inserting documents into DB');
+    Logger.log('DB', 'Inserting documents into DB');
     await Sheet.insertMany(sheets, { ordered: false });
   } catch (err) {
     if (err.code != DUPLICATE_ID_CODE) console.error(err);
   }
-  logger.success('DB');
+  Logger.success('DB');
   console.log('[ 💛 ] Bye!');
   process.exit(0);
 })();
 
 async function parseProblems(contest_id: string) {
-  logger.log(contest_id, `Parsing problems in contest #${contest_id}`);
+  Logger.log(contest_id, `Parsing problems in contest #${contest_id}`);
   const $ = await crawl(`https://codeforces.com/group/MWSDmqGsZm/contest/${contest_id}`);
   const problems = $('.problems')
     .find('td:nth-child(2)')
     .find('a')
     .map((index, el) => ({ name: $(el).text(), id: String.fromCharCode(CHAR_CODE + index) }))
     .get();
-  logger.success(contest_id);
+  Logger.success(contest_id);
   return problems;
 }
