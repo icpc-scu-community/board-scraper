@@ -23,10 +23,12 @@ export default class Logger {
   }
 
   public success(event: string, message?: string): void {
+    if (!this.spinnies.pick(event)) this.log(event, message);
     this.spinnies.succeed(event, { text: message });
   }
 
   public error(event: string, message?: string): void {
+    if (!this.spinnies.pick(event)) this.log(event, message);
     this.spinnies.fail(event, { text: message });
   }
 }
