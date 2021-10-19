@@ -1,11 +1,15 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 import chalk from 'chalk';
 import { ContestParser } from './ContestParser';
 import { contests } from './data.json';
 import { Scraper } from './models';
-import { connectToMongo } from './mongoConnect';
+import { openMongooseConnection } from './database/mongoose-connection';
+
+const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost/newcomers-board';
 
 (async () => {
-  await connectToMongo();
+  await openMongooseConnection(MONGO_URL);
 
   const startTime = new Date();
   console.log(`[ 🛫 ] Scraper Started ${chalk.yellowBright(startTime.toLocaleTimeString())}`);

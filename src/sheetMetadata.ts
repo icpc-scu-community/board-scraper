@@ -1,8 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 import { DUPLICATE_ID_CODE } from './ContestParser';
 import { Sheet } from './models';
-import { connectToMongo } from './mongoConnect';
+import { openMongooseConnection } from './database/mongoose-connection';
 import { crawl, createSpinnies } from './utils';
 
+const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost/newcomers-board';
 const CHAR_CODE = 'A'.charCodeAt(0);
 const spinnies = createSpinnies();
 
@@ -16,7 +19,7 @@ interface IContest {
 }
 
 (async () => {
-  await connectToMongo();
+  await openMongooseConnection(MONGO_URL);
   const url = 'https://codeforces.com/group/MWSDmqGsZm/contests';
   spinnies.add('contests', { text: `Parsing contests page [${url}]` });
   const $ = await crawl(url);
