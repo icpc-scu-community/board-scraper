@@ -12,8 +12,7 @@
     "sheetMetadata:dev": "ts-node-dev --respawn --transpile-only src/sheetMetadata.ts",
     "build": "tsc",
     "lint": "eslint . --ext .js,.ts",
-    "typecheck": "tsc --noEmit -p .",
-    "postinstall": "patch-package"
+    "typecheck": "tsc --noEmit -p ."
   },
   "author": "Kerollos Magdy",
   "license": "ISC",
@@ -33,7 +32,6 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.4.1",
-    "patch-package": "^6.4.7",
     "prettier": "^2.4.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.3"
