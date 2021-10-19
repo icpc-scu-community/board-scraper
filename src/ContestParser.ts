@@ -1,5 +1,5 @@
 import { Contest, Submission } from './models';
-import { crawl } from './utils';
+import { crawl } from './utils/crawler';
 import Logger from './utils/logger';
 
 export const DUPLICATE_ID_CODE = 11000;
