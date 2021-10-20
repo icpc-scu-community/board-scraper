@@ -16,8 +16,8 @@ export const Contest = mongoose.model(
         },
       ],
       status: {
-        totalPages: { type: Number, required: true },
-        lastParsedPage: { type: Number, required: true },
+        totalPages: { type: Number, default: 0 },
+        lastParsedPage: { type: Number, default: -1 },
       },
       groupId: { type: String, required: true, index: true },
     },
