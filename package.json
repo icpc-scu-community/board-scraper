@@ -12,6 +12,8 @@
     "submissions-parser:dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "contests-parser:start": "node dist/sheetMetadata.js",
     "contests-parser:dev": "ts-node-dev --respawn --transpile-only src/sheetMetadata.ts",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
     "build": "tsc",
     "lint": "eslint . --ext .js,.ts",
     "typecheck": "tsc --noEmit -p ."
@@ -34,6 +36,7 @@
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.4.1",
     "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.3"
   }
