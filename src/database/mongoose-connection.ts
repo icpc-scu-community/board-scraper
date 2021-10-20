@@ -6,11 +6,11 @@ const CLOSE_CONNECTION_EVENT = 'close-mongoose-connection';
 
 export async function openMongooseConnection(uri: string): Promise<void> {
   try {
-    Logger.log(OPEN_CONNECTION_EVENT, `Trying to connect to MongoDB with URI: ${uri}.`);
+    Logger.log(OPEN_CONNECTION_EVENT, `Trying to connect to MongoDB.`);
     await mongoose.connect(uri);
-    Logger.success(OPEN_CONNECTION_EVENT, `Succesfuly connected to MongoDB with URI: ${uri}.`);
+    Logger.success(OPEN_CONNECTION_EVENT, `Succesfuly connected to MongoDB.`);
   } catch (e) {
-    Logger.fail(OPEN_CONNECTION_EVENT, `Failed to connect to MongoDB with URI: ${uri}.\n${e}`);
+    Logger.fail(OPEN_CONNECTION_EVENT, `Failed to connect to MongoDB.\n${e}`);
     process.exit(1);
   }
 }
