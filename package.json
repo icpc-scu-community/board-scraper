@@ -6,10 +6,12 @@
     "url": "https://github.com/icpc-scu-community/board-scraper"
   },
   "scripts": {
-    "start": "node .",
-    "sheetMetadata:start": "node dist/sheetMetadata.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "sheetMetadata:dev": "ts-node-dev --respawn --transpile-only src/sheetMetadata.ts",
+    "start": "npm run submissions-parser:start",
+    "dev": "npm run submissions-parser:dev",
+    "submissions-parser:start": "node dist/index.js",
+    "submissions-parser:dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "contests-parser:start": "node dist/sheetMetadata.js",
+    "contests-parser:dev": "ts-node-dev --respawn --transpile-only src/sheetMetadata.ts",
     "build": "tsc",
     "lint": "eslint . --ext .js,.ts",
     "typecheck": "tsc --noEmit -p ."
