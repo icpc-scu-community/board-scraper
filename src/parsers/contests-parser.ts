@@ -1,4 +1,4 @@
-import { openMongooseConnection, closeMongooseConnection } from '../database/mongoose-connection';
+import { openMongooseConnection, closeMongooseConnection } from '../database/mongoose';
 import { mongoURIEnvVar, contestsEnvVar } from '../config';
 import { Logger, crawl, contestPageUrl } from '../utils';
 import { Contest } from '../database/models';

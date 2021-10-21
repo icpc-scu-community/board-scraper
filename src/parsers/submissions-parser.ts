@@ -1,4 +1,4 @@
-import { openMongooseConnection, closeMongooseConnection } from '../database/mongoose-connection';
+import { openMongooseConnection, closeMongooseConnection } from '../database/mongoose';
 import { mongoURIEnvVar } from '../config';
 
 (async () => {
