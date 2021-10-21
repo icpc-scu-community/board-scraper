@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import { ContestParser } from './ContestParser';
 import { contests } from './data.json';
 import { Scraper } from './models';
-import { openMongooseConnection } from './database/mongoose-connection';
+import { openMongooseConnection } from './database/mongoose';
 
 const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost/newcomers-board';
 

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Logger from '../utils/logger';
+import { Logger } from '../../utils';
 
 const OPEN_CONNECTION_LOG_EVENT = 'open-mongoose-connection';
 const CLOSE_CONNECTION_LOG_EVENT = 'close-mongoose-connection';

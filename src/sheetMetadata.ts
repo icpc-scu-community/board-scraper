@@ -2,7 +2,7 @@
 require('dotenv').config();
 import { DUPLICATE_ID_CODE } from './ContestParser';
 import { Sheet } from './models';
-import { openMongooseConnection } from './database/mongoose-connection';
+import { openMongooseConnection } from './database/mongoose';
 import { crawl } from './utils/crawler';
 import Logger from './utils/logger';
 
