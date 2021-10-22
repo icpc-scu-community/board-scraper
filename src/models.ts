@@ -37,7 +37,7 @@ export const Sheet = mongoose.model(
     name: { type: String, required: true },
     problems: [
       {
-        id: Number,
+        id: String, // problem id is a letter in codeforces (e.g. A, B, C, ...)
         name: String,
       },
     ],
