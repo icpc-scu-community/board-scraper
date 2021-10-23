@@ -15,7 +15,7 @@ import { Contest } from '../database/models';
 })();
 
 async function parseContest(contestId: string, groupId: string) {
-  const logEvent = `${groupId}/${contestId}`;
+  const logEvent = `contests-parser:${groupId}/${contestId}`;
   Logger.log(logEvent, `Parsing problems in group "${groupId}", contest "${contestId}"`);
 
   const $ = await crawl(contestPageUrl(contestId, groupId));
