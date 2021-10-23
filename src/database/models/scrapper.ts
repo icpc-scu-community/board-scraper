@@ -1,4 +1,4 @@
-import { prop, modelOptions, getModelForClass } from '@typegoose/typegoose';
+import { prop, modelOptions, getModelForClass, DocumentType } from '@typegoose/typegoose';
 
 // scrapper metadata
 @modelOptions({
@@ -6,9 +6,10 @@ import { prop, modelOptions, getModelForClass } from '@typegoose/typegoose';
     capped: { max: 1, size: 1024 },
   },
 })
-export class Scrapper {
+class Scrapper {
   @prop({ default: Date.now })
   public lastUpdate!: number;
 }
 
 export const ScrapperModel = getModelForClass(Scrapper);
+export type ScrapperType = DocumentType<Scrapper>;

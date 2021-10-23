@@ -1,6 +1,6 @@
-import { prop, getModelForClass } from '@typegoose/typegoose';
+import { prop, getModelForClass, DocumentType } from '@typegoose/typegoose';
 
-export class Submission {
+class Submission {
   @prop({ required: true, unique: true })
   public id!: string;
 
@@ -21,3 +21,4 @@ export class Submission {
 }
 
 export const SubmissionModel = getModelForClass(Submission);
+export type SubmissionType = DocumentType<Submission>;
