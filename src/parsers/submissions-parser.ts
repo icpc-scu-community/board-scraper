@@ -1,6 +1,6 @@
 import { openMongooseConnection, closeMongooseConnection, DuplicateKeyError } from '../database/mongoose';
 import { mongoURIEnvVar, contestsEnvVar } from '../config';
-import { Logger } from '../utils';
+import { Logger } from '../services/logger';
 import { crawlSubmissions, crawlSubmissionsTotalPages } from '../services/crawler';
 import { ContestType, ContestModel, SubmissionModel } from '../database/models';
 
