@@ -1,6 +1,6 @@
 import { openMongooseConnection, closeMongooseConnection } from '../database/mongoose';
 import { mongoURIEnvVar, contestsEnvVar } from '../config';
-import { Logger } from '../utils';
+import { Logger } from '../services/logger';
 import { crawlContest } from '../services/crawler';
 import { ContestType, ContestModel } from '../database/models';
 
