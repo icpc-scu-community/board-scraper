@@ -27,7 +27,7 @@
     "got": "^11.8.2",
     "mongodb": "^4.1.3",
     "mongoose": "^6.0.11",
-    "spinnies": "^0.5.1"
+    "spinnies": "^0.3.2"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.30",
