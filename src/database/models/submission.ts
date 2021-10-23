@@ -8,5 +8,6 @@ export const Submission = mongoose.model(
     problem: { type: String, required: true },
     verdict: { type: String, required: true },
     contestId: { type: String, required: true, index: true },
+    groupId: { type: String, required: true, index: true },
   }),
 );
