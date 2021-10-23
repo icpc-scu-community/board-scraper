@@ -1,7 +1,8 @@
 import { openMongooseConnection, closeMongooseConnection, DuplicateKeyError } from '../database/mongoose';
 import { mongoURIEnvVar, contestsEnvVar } from '../config';
-import { Logger, crawl, statusPageUrl } from '../utils';
-import { ContestType, ContestModel, SubmissionModel, SubmissionType } from '../database/models';
+import { Logger } from '../utils';
+import { crawlSubmissions, crawlSubmissionsTotalPages } from '../services/crawler';
+import { ContestType, ContestModel, SubmissionModel } from '../database/models';
 
 (async () => {
   await openMongooseConnection(mongoURIEnvVar);
@@ -25,8 +26,7 @@ async function parseContestSubmissions(contest: ContestType): Promise<number> {
   Logger.log(logEvent, `Parsing submissions of contest "${contestIdentifer}"`);
 
   // get total pages
-  const $firstStatusPage = await crawl(statusPageUrl(contestId, groupId));
-  const totalPages = parseInt($firstStatusPage('[pageindex]').last().attr('pageindex') || '1');
+  const totalPages = await crawlSubmissionsTotalPages(groupId, contestId);
 
   // parse page by page
   let newDocsCnt = 0;
@@ -37,25 +37,11 @@ async function parseContestSubmissions(contest: ContestType): Promise<number> {
     );
 
     // crawl the page
-    const $statusPage = await crawl(statusPageUrl(contestId, groupId, page));
-
-    // check for pending submissions
-    const containsPendingSubmissions = !!$statusPage('td[waiting=true]').text();
+    const { containsPendingSubmissions, submissions } = await crawlSubmissions(groupId, contestId, page);
     if (containsPendingSubmissions) {
       Logger.fail(logEvent, `Pausing - pending submissions on contest "${contestIdentifer}"! ~ Added ${newDocsCnt}`);
       return newDocsCnt;
     }
-
-    // parse submissions
-    const submissions: SubmissionType[] = $statusPage('tr[data-submission-id]')
-      .map((_, row) => {
-        const [id, __, handle, problem, ___, verdict] = $statusPage(row)
-          .children('td')
-          .map((_, cell) => $statusPage(cell).text().trim())
-          .get();
-        return { id, handle, problem, verdict, contestId };
-      })
-      .get();
 
     // save submissions
     try {
