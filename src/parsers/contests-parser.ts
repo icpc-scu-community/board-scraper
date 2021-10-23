@@ -1,7 +1,7 @@
 import { openMongooseConnection, closeMongooseConnection } from '../database/mongoose';
 import { mongoURIEnvVar, contestsEnvVar } from '../config';
 import { Logger, crawl, contestPageUrl } from '../utils';
-import { Contest, ContestModel } from '../database/models';
+import { ContestType, ContestModel } from '../database/models';
 
 (async () => {
   // parse
@@ -14,7 +14,7 @@ import { Contest, ContestModel } from '../database/models';
   await closeMongooseConnection();
 })();
 
-async function parseContest(contestId: string, groupId: string): Promise<Contest> {
+async function parseContest(contestId: string, groupId: string): Promise<ContestType> {
   const logEvent = `contests-parser:${groupId}/${contestId}`;
   Logger.log(logEvent, `Parsing problems in group "${groupId}", contest "${contestId}"`);
 
