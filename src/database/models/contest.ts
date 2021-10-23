@@ -1,4 +1,4 @@
-import { prop, getModelForClass } from '@typegoose/typegoose';
+import { prop, getModelForClass, DocumentType } from '@typegoose/typegoose';
 
 class Problem {
   @prop() public id!: string; // problem id is a letter in codeforces (e.g. A, B, C, ...)
@@ -8,7 +8,7 @@ class Problem {
 // each codeforces group (e.g. https://codeforces.com/group/n3sTiYtHxI/) has a set of contests (aka sheets)
 // every contest (e.g. https://codeforces.com/group/n3sTiYtHxI/contest/348729) consists of problems and submissions
 // submissions exist under status page (e.g. https://codeforces.com/group/n3sTiYtHxI/contest/348729/status)
-export class Contest {
+class Contest {
   @prop({ required: true, unique: true, index: true })
   public id!: string;
 
@@ -26,3 +26,4 @@ export class Contest {
 }
 
 export const ContestModel = getModelForClass(Contest);
+export type ContestType = DocumentType<Contest>;
