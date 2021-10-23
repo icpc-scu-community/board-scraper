@@ -1,4 +1,4 @@
-import Logger from '../utils/Logger';
+import { Logger } from '../utils';
 
 function env(name: string, required?: true): string;
 function env(name: string, required: false): string | undefined;
