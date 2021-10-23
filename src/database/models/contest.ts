@@ -1,11 +1,13 @@
-import { prop, modelOptions, getModelForClass, Severity } from '@typegoose/typegoose';
+import { prop, getModelForClass } from '@typegoose/typegoose';
+
+class Problem {
+  @prop() public id!: string; // problem id is a letter in codeforces (e.g. A, B, C, ...)
+  @prop() public name!: string;
+}
 
 // each codeforces group (e.g. https://codeforces.com/group/n3sTiYtHxI/) has a set of contests (aka sheets)
 // every contest (e.g. https://codeforces.com/group/n3sTiYtHxI/contest/348729) consists of problems and submissions
 // submissions exist under status page (e.g. https://codeforces.com/group/n3sTiYtHxI/contest/348729/status)
-@modelOptions({
-  options: { allowMixed: Severity.ALLOW },
-})
 export class Contest {
   @prop({ required: true, unique: true, index: true })
   public id!: string;
@@ -16,16 +18,11 @@ export class Contest {
   @prop({ required: true })
   public name!: string;
 
-  @prop({ default: [] })
-  public problems!: {
-    id: string;
-    name: string;
-  }[];
+  @prop({ type: () => Problem, _id: false, default: [] })
+  public problems!: Problem[];
 
-  @prop({ default: { lastParsedPage: 1 } })
-  public status!: {
-    lastParsedPage: number;
-  };
+  @prop({ required: true, default: 1 })
+  public lastParsedStatusPage!: number;
 }
 
 export const ContestModel = getModelForClass(Contest);
