@@ -1,6 +1,7 @@
 import { openMongooseConnection, closeMongooseConnection } from '../database/mongoose';
 import { mongoURIEnvVar, contestsEnvVar } from '../config';
-import { Logger, crawl, contestPageUrl } from '../utils';
+import { Logger } from '../utils';
+import { crawlContest } from '../services/crawler';
 import { ContestType, ContestModel } from '../database/models';
 
 (async () => {
@@ -17,16 +18,7 @@ import { ContestType, ContestModel } from '../database/models';
 async function parseContest(contestId: string, groupId: string): Promise<ContestType> {
   const logEvent = `contests-parser:${groupId}/${contestId}`;
   Logger.log(logEvent, `Parsing problems in group "${groupId}", contest "${contestId}"`);
-
-  const $ = await crawl(contestPageUrl(contestId, groupId));
-  const problems = $('.problems')
-    .find('tr:not(:first-child)')
-    .map((_, el) => ({
-      id: $(el).find('td:nth-child(1) a').text().trim(),
-      name: $(el).find('td:nth-child(2) a').text().trim(),
-    }))
-    .get();
-  const name = $('#sidebar div:nth-child(3) a').text().trim();
+  const { name, problems } = await crawlContest(groupId, contestId);
   Logger.success(logEvent);
 
   return new ContestModel({
