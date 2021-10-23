@@ -9,11 +9,13 @@ interface IContestEnvVar {
 const CONTESTS_DELIMITER = ',';
 const CONTEST_GROUP_DELIMITER = '/';
 
-export const contestsEnvVar: IContestEnvVar[] = env('CONTESTS')
-  .split(CONTESTS_DELIMITER) // split contests
-  .map((contest) => contest.split(CONTEST_GROUP_DELIMITER)) // split contest details
-  .filter((contest) => contest.length === 2) // filter invalid contests
+const sanitizedEnvVarValue = env('CONTESTS').toLowerCase().replace(/\s/g, '');
+const contestIdentifiers = sanitizedEnvVarValue.split(CONTESTS_DELIMITER);
+const uniqueContestIdentifiers = Array.from(new Set(contestIdentifiers));
+export const contestsEnvVar: IContestEnvVar[] = uniqueContestIdentifiers
+  .map((contest) => contest.split(CONTEST_GROUP_DELIMITER))
+  .filter((contest) => contest.length === 2)
   .map(([groupId, contestId]) => ({
-    contestId: contestId.trim(),
-    groupId: groupId.trim(),
+    contestId,
+    groupId,
   }));
