@@ -10,7 +10,7 @@ class Problem {
 // submissions exist under status page (e.g. https://codeforces.com/group/n3sTiYtHxI/contest/348729/status)
 class Contest {
   @prop({ required: true, unique: true, index: true })
-  public id!: string;
+  public id!: number;
 
   @prop({ required: true, index: true })
   public groupId!: string;

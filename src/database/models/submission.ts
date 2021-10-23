@@ -2,7 +2,7 @@ import { prop, getModelForClass, DocumentType } from '@typegoose/typegoose';
 
 class Submission {
   @prop({ required: true, unique: true })
-  public id!: string;
+  public id!: number;
 
   @prop({ required: true, lowercase: true, index: true })
   public handle!: string;
@@ -14,7 +14,7 @@ class Submission {
   public verdict!: string;
 
   @prop({ required: true, index: true })
-  public contestId!: string;
+  public contestId!: number;
 
   @prop({ required: true, index: true })
   public groupId!: string;
