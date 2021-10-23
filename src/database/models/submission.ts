@@ -15,9 +15,6 @@ class Submission {
 
   @prop({ required: true, index: true })
   public contestId!: number;
-
-  @prop({ required: true, index: true })
-  public groupId!: string;
 }
 
 export const SubmissionModel = getModelForClass(Submission);
