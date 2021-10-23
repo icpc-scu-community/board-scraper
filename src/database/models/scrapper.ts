@@ -1,12 +1,14 @@
-import mongoose from 'mongoose';
+import { prop, modelOptions, getModelForClass } from '@typegoose/typegoose';
 
 // scrapper metadata
-export const Scraper = mongoose.model(
-  'Scraper',
-  new mongoose.Schema(
-    {
-      lastUpdate: { type: Number, default: Date.now },
-    },
-    { capped: { max: 1, size: 1024 } },
-  ),
-);
+@modelOptions({
+  schemaOptions: {
+    capped: { max: 1, size: 1024 },
+  },
+})
+export class Scrapper {
+  @prop({ default: Date.now })
+  public lastUpdate!: number;
+}
+
+export const ScrapperModel = getModelForClass(Scrapper);
