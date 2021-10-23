@@ -1,36 +1,26 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
 import chalk from 'chalk';
-import { ContestParser } from './ContestParser';
-import { contests } from './data.json';
-import { Scraper } from './models';
-import { openMongooseConnection } from './database/mongoose';
-
-const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost/newcomers-board';
+import { mongoURIEnvVar, contestsEnvVar } from './config';
+import { openMongooseConnection, closeMongooseConnection } from './database/mongoose';
+import { ScraperModel } from './database/models';
 
 (async () => {
-  await openMongooseConnection(MONGO_URL);
+  await openMongooseConnection(mongoURIEnvVar);
 
   const startTime = new Date();
   console.log(`[ 🛫 ] Scraper Started ${chalk.yellowBright(startTime.toLocaleTimeString())}`);
-  const lastUpdate = (await Scraper.findOne())?.get('lastUpdate');
+  const lastUpdate = (await ScraperModel.findOne())?.lastUpdate;
   const lastUpdatedDate = lastUpdate ? new Date(lastUpdate).toLocaleString() : 'N/A - First run';
   console.log(`[ 🌀 ] Last Updated ${chalk.yellowBright(lastUpdatedDate)}`);
-  console.log(`[ ❗ ] Parsing ${chalk.blueBright(contests.length)} contest(s)`);
+  console.log(`[ ❗ ] Parsing ${chalk.blueBright(contestsEnvVar.length)} contest(s)`);
 
-  const contestParsers = contests.map((contest) => new ContestParser(contest).parseAll());
-  const parsedSubmissions = await Promise.all(contestParsers);
-  const totalParsedSubmissions = parsedSubmissions.reduce((acc, current) => acc + current, 0);
-
-  await new Scraper().save();
+  await new ScraperModel().save();
 
   const endTime = new Date();
   const takenTime = endTime.getTime() - startTime.getTime();
   console.log(`[ 🛬 ] Scraper Finished ${chalk.yellowBright(endTime.toLocaleTimeString())}`);
-  console.log(
-    `[ 🕑 ] Took ${chalk.cyanBright(calculateTime(takenTime))} ~ Total added ${chalk.cyan(totalParsedSubmissions)}`,
-  );
-  process.exit(0);
+  console.log(`[ 🕑 ] Took ${chalk.cyanBright(calculateTime(takenTime))} ~ Total added ${chalk.cyan('0')}`);
+
+  await closeMongooseConnection();
 })();
 
 function calculateTime(distance: number) {
