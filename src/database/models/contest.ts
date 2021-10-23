@@ -4,10 +4,10 @@ import { prop, getModelForClass, DocumentType } from '@typegoose/typegoose';
 // every contest (e.g. https://codeforces.com/group/n3sTiYtHxI/contest/348729) consists of problems and submissions
 // submissions exist under status page (e.g. https://codeforces.com/group/n3sTiYtHxI/contest/348729/status)
 class Contest {
-  @prop({ required: true, unique: true, index: true })
+  @prop({ required: true, unique: true })
   public id!: number;
 
-  @prop({ required: true, index: true })
+  @prop({ required: true, lowercase: true, index: true })
   public groupId!: string;
 
   @prop({ required: true })
