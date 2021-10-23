@@ -1,8 +1,11 @@
 import mongoose from 'mongoose';
+import { duplicateKeyErrorHandler } from './plugins';
 import { Logger } from '../../utils';
 
 const OPEN_CONNECTION_LOG_EVENT = 'monggose:open-mongoose-connection';
 const CLOSE_CONNECTION_LOG_EVENT = 'monggose:close-mongoose-connection';
+
+mongoose.plugin(duplicateKeyErrorHandler);
 
 export async function openMongooseConnection(uri: string): Promise<void> {
   try {
