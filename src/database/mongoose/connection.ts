@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { Logger } from '../../utils';
 
-const OPEN_CONNECTION_LOG_EVENT = 'open-mongoose-connection';
-const CLOSE_CONNECTION_LOG_EVENT = 'close-mongoose-connection';
+const OPEN_CONNECTION_LOG_EVENT = 'monggose:open-mongoose-connection';
+const CLOSE_CONNECTION_LOG_EVENT = 'monggose:close-mongoose-connection';
 
 export async function openMongooseConnection(uri: string): Promise<void> {
   try {
