@@ -22,9 +22,8 @@ export class Contest {
     name: string;
   }[];
 
-  @prop({ default: { totalPages: 1, lastParsedPage: 1 } })
+  @prop({ default: { lastParsedPage: 1 } })
   public status!: {
-    totalPages: number;
     lastParsedPage: number;
   };
 }
