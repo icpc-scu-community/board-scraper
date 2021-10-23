@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { mongoURIEnvVar, contestsEnvVar } from './config';
 import { openMongooseConnection, closeMongooseConnection } from './database/mongoose';
 import { ScraperModel } from './database/models';
@@ -7,18 +6,18 @@ import { ScraperModel } from './database/models';
   await openMongooseConnection(mongoURIEnvVar);
 
   const startTime = new Date();
-  console.log(`[ 🛫 ] Scraper Started ${chalk.yellowBright(startTime.toLocaleTimeString())}`);
+  console.log(`[ 🛫 ] Scraper Started ${startTime.toLocaleTimeString()}`);
   const lastUpdate = (await ScraperModel.findOne())?.lastUpdate;
   const lastUpdatedDate = lastUpdate ? new Date(lastUpdate).toLocaleString() : 'N/A - First run';
-  console.log(`[ 🌀 ] Last Updated ${chalk.yellowBright(lastUpdatedDate)}`);
-  console.log(`[ ❗ ] Parsing ${chalk.blueBright(contestsEnvVar.length)} contest(s)`);
+  console.log(`[ 🌀 ] Last Updated ${lastUpdatedDate}`);
+  console.log(`[ ❗ ] Parsing ${contestsEnvVar.length} contest(s)`);
 
   await new ScraperModel().save();
 
   const endTime = new Date();
   const takenTime = endTime.getTime() - startTime.getTime();
-  console.log(`[ 🛬 ] Scraper Finished ${chalk.yellowBright(endTime.toLocaleTimeString())}`);
-  console.log(`[ 🕑 ] Took ${chalk.cyanBright(calculateTime(takenTime))} ~ Total added ${chalk.cyan('0')}`);
+  console.log(`[ 🛬 ] Scraper Finished ${endTime.toLocaleTimeString()}`);
+  console.log(`[ 🕑 ] Took ${calculateTime(takenTime)} ~ Total added ${'0'}`);
 
   await closeMongooseConnection();
 })();
