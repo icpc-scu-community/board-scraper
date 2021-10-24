@@ -8,8 +8,12 @@ export async function parseSubmissions(): Promise<void> {
     id: { $in: contestsEnvVar.map(({ contestId }) => contestId) },
     groupId: { $in: contestsEnvVar.map(({ groupId }) => groupId) },
   });
+
   const submissionsParsing = contests.map((contest) => parseContestSubmissions(contest));
-  await Promise.all(submissionsParsing);
+  const parsedSubmissionsCounts = await Promise.all(submissionsParsing);
+
+  const totalParsedSubmissions = parsedSubmissionsCounts.reduce((total, count) => total + count, 0);
+  Logger.success(`Successfully parsed ${totalParsedSubmissions} submissions.`);
 }
 
 async function parseContestSubmissions(contest: ContestType): Promise<number> {

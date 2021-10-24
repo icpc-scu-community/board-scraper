@@ -17,6 +17,6 @@ import { parseContests, parseSubmissions } from './parsers';
       const endTime = new Date();
       const takenTime = endTime.getTime() - startTime.getTime();
       Logger.success(`Scraper finished at ${endTime.toLocaleTimeString()}.`);
-      Logger.success(`Took ${formatTime(takenTime)} ~ Total added ${'0'}.`);
+      Logger.success(`Took ${formatTime(takenTime)}.`);
     });
 })();
