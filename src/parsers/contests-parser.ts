@@ -1,8 +1,7 @@
-import { DuplicateKeyError } from '../database/mongoose';
+import { ContestType, ContestModel, DuplicateKeyError } from '../database';
 import { contestsEnvVar } from '../config';
 import { Logger } from '../services/logger';
 import { crawlContest } from '../services/crawler';
-import { ContestType, ContestModel } from '../database/models';
 
 export async function parseContests(): Promise<void> {
   // parse
