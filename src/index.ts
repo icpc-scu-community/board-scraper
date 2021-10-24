@@ -1,5 +1,4 @@
-import { openMongooseConnection, closeMongooseConnection } from './database/mongoose';
-import { ScraperModel } from './database/models';
+import { openMongooseConnection, closeMongooseConnection, ScraperModel } from './database';
 import { mongoURIEnvVar } from './config';
 import { formatTime } from './utils';
 import { Logger } from './services/logger';
