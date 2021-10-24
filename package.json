@@ -1,6 +1,6 @@
 {
   "name": "newcomers-board-scraper",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "repository": {
     "url": "https://github.com/icpc-scu-community/board-scraper"
