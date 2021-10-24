@@ -20,13 +20,13 @@ async function parseContest(groupId: string, contestId: string): Promise<Contest
   const contestIdentifer = `${groupId}/${contestId}`;
   const logEvent = `contests-parser:${contestIdentifer}`;
 
-  Logger.log(logEvent, `Parsing problems of contest "${contestIdentifer}"`);
+  Logger.log(logEvent, `Parsing problems of contest "${contestIdentifer}".`);
   try {
     const { name, problems } = await crawlContest(groupId, contestId);
     Logger.success(logEvent);
     return new ContestModel({ id: contestId, groupId, name, problems });
   } catch (error) {
-    Logger.fail(logEvent, `Parsing problems of contest "${contestIdentifer}" has been failed. ${error}`);
+    Logger.fail(logEvent, `Parsing problems of contest "${contestIdentifer}" has been failed.\n${error}`);
     throw error;
   }
 }
@@ -41,15 +41,15 @@ async function saveContests(contests: ContestType[]): Promise<void> {
 
   try {
     await ContestModel.insertMany(contests, { ordered: false });
-    Logger.success(logEvent, `Contests has been saved successflly, number of affected documents: ${contests.length}`);
+    Logger.success(logEvent, `Contests has been saved successflly, number of created documents: ${contests.length}.`);
   } catch (error) {
     if (error instanceof DuplicateKeyError) {
       Logger.success(
         logEvent,
-        `Some or all of the contests are already saved before, number of affected documents: ${error.nInserted}.`,
+        `Some or all of the contests are already saved before, number of created documents: ${error.nInserted}.`,
       );
     } else {
-      Logger.fail(logEvent, `Something went wrong during contests insertion. ${error}`);
+      Logger.fail(logEvent, `Something went wrong during contests insertion.\n${error}`);
     }
   }
 }
