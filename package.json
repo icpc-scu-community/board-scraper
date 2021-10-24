@@ -1,5 +1,5 @@
 {
-  "name": "newcomers-board-scraper",
+  "name": "board-scraper",
   "version": "1.0.0",
   "main": "dist/index.js",
   "repository": {
