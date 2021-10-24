@@ -19,7 +19,7 @@ async function parseContestSubmissions(contest: ContestType): Promise<number> {
 
   const contestIdentifer = `${groupId}/${contestId}`;
   const logEvent = `submission-parser:${contestIdentifer}`;
-  Logger.log(logEvent, `Parsing submissions of contest "${contestIdentifer}"`);
+  Logger.log(logEvent, `Parsing submissions of contest "${contestIdentifer}".`);
 
   // get total pages
   const totalPages = await crawlSubmissionsTotalPages(groupId, contestId);
@@ -29,13 +29,13 @@ async function parseContestSubmissions(contest: ContestType): Promise<number> {
   for (let page = contest.lastParsedStatusPage; page <= totalPages; page++) {
     Logger.log(
       logEvent,
-      `Parsing submissions of contest "${contestIdentifer}" on page ${page}/${totalPages} ~ Added (${newDocsCnt})`,
+      `Parsing submissions of contest "${contestIdentifer}" on page ${page}/${totalPages} ~ Added ${newDocsCnt}.`,
     );
 
     // crawl the page
     const { containsPendingSubmissions, submissions } = await crawlSubmissions(groupId, contestId, page);
     if (containsPendingSubmissions) {
-      Logger.fail(logEvent, `Pausing - pending submissions on contest "${contestIdentifer}"! ~ Added ${newDocsCnt}`);
+      Logger.fail(logEvent, `Pausing - pending submissions on contest "${contestIdentifer}"! ~ Added ${newDocsCnt}.`);
       return newDocsCnt;
     }
 
@@ -48,7 +48,10 @@ async function parseContestSubmissions(contest: ContestType): Promise<number> {
       if (error instanceof DuplicateKeyError) {
         newDocsCnt += error.nInserted;
       } else {
-        Logger.fail(logEvent, `Pausing - something went wrong on contest "${contestIdentifer}"! ~ Added ${newDocsCnt}`);
+        Logger.fail(
+          logEvent,
+          `Pausing - something went wrong on contest "${contestIdentifer}"! ~ Added ${newDocsCnt}.`,
+        );
         return newDocsCnt;
       }
     }
@@ -58,6 +61,6 @@ async function parseContestSubmissions(contest: ContestType): Promise<number> {
     await contest.save();
   }
 
-  Logger.success(logEvent, `Successfuly parsed contest "${contestIdentifer}" ~ Added ${newDocsCnt}`);
+  Logger.success(logEvent, `Successfuly parsed contest "${contestIdentifer}" ~ Added ${newDocsCnt}.`);
   return newDocsCnt;
 }
