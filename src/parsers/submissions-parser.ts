@@ -64,6 +64,6 @@ async function parseContestSubmissions(contest: ContestType): Promise<number> {
     await contest.save();
   }
 
-  Logger.success(logEvent, `Successfuly parsed contest "${contestIdentifer}" ~ Added ${newDocsCnt}.`);
+  Logger.success(logEvent, `Successfully parsed contest "${contestIdentifer}" ~ Added ${newDocsCnt}.`);
   return newDocsCnt;
 }
