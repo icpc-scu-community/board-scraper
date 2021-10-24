@@ -43,7 +43,7 @@ async function parseContestSubmissions(contest: ContestType): Promise<number> {
     try {
       const docs = await SubmissionModel.insertMany(submissions, { ordered: false });
       newDocsCnt += docs.length;
-    } catch (error: unknown) {
+    } catch (error) {
       // parsing the same page twice may produce a duplicate key error and it should be expected
       if (error instanceof DuplicateKeyError) {
         newDocsCnt += error.nInserted;
