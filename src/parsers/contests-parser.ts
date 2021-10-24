@@ -28,7 +28,7 @@ async function parseContest(groupId: string, contestId: string): Promise<Contest
     Logger.success(logEvent);
     return new ContestModel({ id: contestId, groupId, name, problems });
   } catch (error) {
-    Logger.fail(logEvent, `Parsing problems of contest "${contestIdentifer}" has been failed.${error}`);
+    Logger.fail(logEvent, `Parsing problems of contest "${contestIdentifer}" has been failed. ${error}`);
     throw error;
   }
 }
