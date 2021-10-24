@@ -7,24 +7,28 @@ import { ContestType, ContestModel } from '../database/models';
 (async () => {
   // parse
   const contestsParsing = contestsEnvVar.map(({ groupId, contestId }) => parseContest(groupId, contestId));
-  const contests = await Promise.all(contestsParsing);
+  const contestsParsingResults = await Promise.allSettled(contestsParsing);
+  const successfullyParsedContests = contestsParsingResults
+    .filter((promiseResult) => promiseResult.status === 'fulfilled')
+    .map((promiseResult) => (promiseResult as PromiseFulfilledResult<ContestType>).value);
 
   // save
   await openMongooseConnection(mongoURIEnvVar);
-  await ContestModel.insertMany(contests, { ordered: false });
+  await ContestModel.insertMany(successfullyParsedContests, { ordered: false });
   await closeMongooseConnection();
 })();
 
 async function parseContest(groupId: string, contestId: string): Promise<ContestType> {
-  const logEvent = `contests-parser:${groupId}/${contestId}`;
-  Logger.log(logEvent, `Parsing problems in group "${groupId}", contest "${contestId}"`);
-  const { name, problems } = await crawlContest(groupId, contestId);
-  Logger.success(logEvent);
+  const contestIdentifer = `${groupId}/${contestId}`;
+  const logEvent = `contests-parser:${contestIdentifer}`;
 
-  return new ContestModel({
-    id: contestId,
-    groupId,
-    name,
-    problems,
-  });
+  Logger.log(logEvent, `Parsing problems of contest "${contestIdentifer}"`);
+  try {
+    const { name, problems } = await crawlContest(groupId, contestId);
+    Logger.success(logEvent);
+    return new ContestModel({ id: contestId, groupId, name, problems });
+  } catch (error) {
+    Logger.fail(logEvent, `Parsing problems of contest "${contestIdentifer}" has been failed.${error}`);
+    throw error;
+  }
 }
