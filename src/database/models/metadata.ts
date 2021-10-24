@@ -12,3 +12,7 @@ class Metadata {
 
 export const MetadataModel = getModelForClass(Metadata);
 export type MetadataType = DocumentType<Metadata>;
+
+export async function updateMetadata(): Promise<void> {
+  await MetadataModel.create({});
+}

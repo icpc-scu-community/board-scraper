@@ -1,22 +1,15 @@
-import { openMongooseConnection, closeMongooseConnection, MetadataModel } from './database';
-import { mongoURIEnvVar } from './config';
-import { formatTime } from './utils';
-import { Logger } from './services/logger';
+import { closeMongooseConnection, openMongooseConnection, updateMetadata } from './database';
 import { parseContests, parseSubmissions } from './parsers';
+import { Timer } from './services/Timer';
 
 (async () => {
-  const startTime = new Date();
-  Logger.success(`Scraper started at ${startTime.toLocaleTimeString()}.`);
+  // handle CTRL+C
 
-  openMongooseConnection(mongoURIEnvVar)
-    .then(() => parseContests())
-    .then(() => parseSubmissions())
-    .finally(() => MetadataModel.create({}))
-    .finally(() => closeMongooseConnection())
-    .finally(() => {
-      const endTime = new Date();
-      const takenTime = endTime.getTime() - startTime.getTime();
-      Logger.success(`Scraper finished at ${endTime.toLocaleTimeString()}.`);
-      Logger.success(`Took ${formatTime(takenTime)}.`);
-    });
+  Timer.start()
+    .then(openMongooseConnection)
+    .then(parseContests)
+    .then(parseSubmissions)
+    .finally(updateMetadata)
+    .finally(closeMongooseConnection)
+    .finally(Timer.stop);
 })();
