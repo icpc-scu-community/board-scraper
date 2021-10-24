@@ -6,7 +6,7 @@ import { ContestType, ContestModel } from '../database/models';
 
 (async () => {
   // parse
-  const contestsParsing = contestsEnvVar.map(({ contestId, groupId }) => parseContest(contestId, groupId));
+  const contestsParsing = contestsEnvVar.map(({ groupId, contestId }) => parseContest(groupId, contestId));
   const contests = await Promise.all(contestsParsing);
 
   // save
@@ -15,7 +15,7 @@ import { ContestType, ContestModel } from '../database/models';
   await closeMongooseConnection();
 })();
 
-async function parseContest(contestId: string, groupId: string): Promise<ContestType> {
+async function parseContest(groupId: string, contestId: string): Promise<ContestType> {
   const logEvent = `contests-parser:${groupId}/${contestId}`;
   Logger.log(logEvent, `Parsing problems in group "${groupId}", contest "${contestId}"`);
   const { name, problems } = await crawlContest(groupId, contestId);

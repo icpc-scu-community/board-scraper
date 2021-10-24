@@ -1,8 +1,8 @@
 import env from './env';
 
 interface IContestEnvVar {
-  contestId: string;
   groupId: string;
+  contestId: string;
 }
 
 // Example: CONTESTS=n3sTiYtHxI/348729,n3sTiYtHxI/348730
@@ -16,6 +16,6 @@ export const contestsEnvVar: IContestEnvVar[] = uniqueContestIdentifiers
   .map((contest) => contest.split(CONTEST_GROUP_DELIMITER))
   .filter((contest) => contest.length === 2)
   .map(([groupId, contestId]) => ({
-    contestId,
     groupId,
+    contestId,
   }));
