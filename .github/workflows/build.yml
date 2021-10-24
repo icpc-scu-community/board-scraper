@@ -1,0 +1,18 @@
+on:
+  push:
+  pull_request:
+
+jobs:
+  tsc:
+    name: build typescript
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: install node 
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16
+    - name: npm install
+      run: npm i
+    - name: npm run build
+      run: npm run build
