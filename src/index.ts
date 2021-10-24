@@ -1,10 +1,8 @@
-import { closeMongooseConnection, openMongooseConnection, updateMetadata } from './database';
+import { closeMongooseConnection, openMongooseConnection, MetadataModel } from './database';
 import { parseContests, parseSubmissions } from './parsers';
 import { Timer } from './services/Timer';
 
 (async () => {
-  // handle CTRL+C
-
   Timer.start()
     .then(openMongooseConnection)
     .then(parseContests)
@@ -13,3 +11,7 @@ import { Timer } from './services/Timer';
     .finally(closeMongooseConnection)
     .finally(Timer.stop);
 })();
+
+async function updateMetadata(): Promise<void> {
+  await MetadataModel.create({});
+}
