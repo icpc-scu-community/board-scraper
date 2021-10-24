@@ -1,4 +1,4 @@
-import { openMongooseConnection, closeMongooseConnection, ScraperModel } from './database';
+import { openMongooseConnection, closeMongooseConnection, MetadataModel } from './database';
 import { mongoURIEnvVar } from './config';
 import { formatTime } from './utils';
 import { Logger } from './services/logger';
@@ -11,7 +11,7 @@ import { parseContests, parseSubmissions } from './parsers';
   openMongooseConnection(mongoURIEnvVar)
     .then(() => parseContests())
     .then(() => parseSubmissions())
-    .finally(() => ScraperModel.create({}))
+    .finally(() => MetadataModel.create({}))
     .finally(() => closeMongooseConnection())
     .finally(() => {
       const endTime = new Date();
