@@ -1,29 +1,30 @@
 # Board Scraper
 
-> This [scraper](https://en.wikipedia.org/wiki/Web_scraping) is able to go through submission pages in a CodeForces contest and store those submissions in a database.
+## Motivation
 
-The main reason we built this scraper is to scrape the submissions from [Assuit's newcomers sheet](https://codeforces.com/group/MWSDmqGsZm/contests). To use it with other contests just edit the URL in the _**formulateLink**_ method in [ContestParser.ts](./src/ContestParser.ts) file.
+ICPC training communites create [codefroces](https://codeforces.com/) groups for their communites, and usually they make sheets of problems in form of contests. The main goal of this [scraper](https://en.wikipedia.org/wiki/Web_scraping) is to scrape, parse, and save contests and submissions of these groups to be easily accessible by the [board API](https://github.com/icpc-scu-community/board-api).
+
+### Examples of codeforces groups
+
+- [Assiut University Training - Newcomers](https://codeforces.com/group/MWSDmqGsZm/contests)
+- [ICPC SCU Newcomers Sheets '22](https://codeforces.com/group/n3sTiYtHxI/contests)
 
 ## Usage
 
-- Clone the repository
-- Edit [data.json](./src/data.json) file to add or remove contest id
-- Create `.env` file and add the required variables in `.env.example`
-- Install the dependencies and build the files
+- Clone this repository.
+- Install the dependencies and build the files:
 
   ```bash
-  npm i          # Install the required packages
-  npm run build  # Transpile TypeScript files into JavaScript
+  npm i
+  npm run build
   ```
 
-### Scraping the submissions
+- Copy `.env.example` file and rename it to `.env`.
+- Update the values of the `.env` files as follow:
+  - `MONGO_URI` is the MongoDB URI connection URI.
+  - `CONTESTS` is a list of `groupId/contestId` pairs to be scraped separated by `,`.
+- Finally, run the scraper:
 
-Run `npm start` and watch the magic happen :sparkles:!
-
-![Demo](https://i.imgur.com/fMYLONS.gif)
-
-### Scraping contests and problems data
-
-Run `npm run sheetMetadata:start` to save data about contests and their problems.
-
-![Demo](https://i.imgur.com/ejon77M.gif)
+  ```bash
+  npm start
+  ```
