@@ -6,8 +6,8 @@
     "url": "https://github.com/icpc-scu-community/board-scraper"
   },
   "scripts": {
-    "start": "npm run submissions-parser:start",
-    "dev": "npm run submissions-parser:dev",
+    "start": "node -r dotenv/config dist",
+    "dev": "ts-node-dev --respawn -r dotenv/config src",
     "submissions-parser:start": "node -r dotenv/config dist/parsers/submissions-parser.js",
     "submissions-parser:dev": "ts-node-dev --respawn -r dotenv/config src/parsers/submissions-parser.ts",
     "contests-parser:start": "node -r dotenv/config dist/parsers/contests-parser.js",
