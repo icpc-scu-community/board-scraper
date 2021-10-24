@@ -18,8 +18,8 @@ import { ContestType, ContestModel, SubmissionModel } from '../database/models';
 })();
 
 async function parseContestSubmissions(contest: ContestType): Promise<number> {
-  const contestId = contest.id;
   const groupId = contest.groupId;
+  const contestId = contest.id;
 
   const contestIdentifer = `${groupId}/${contestId}`;
   const logEvent = `submission-parser:${contestIdentifer}`;
