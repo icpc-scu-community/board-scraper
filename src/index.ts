@@ -3,6 +3,7 @@ import { openMongooseConnection, closeMongooseConnection } from './database/mong
 import { ScraperModel } from './database/models';
 import { Logger } from './services/logger';
 import { formatTime } from './utils';
+import { parseContests, parseSubmissions } from './parsers';
 
 (async () => {
   // log start time
@@ -12,10 +13,14 @@ import { formatTime } from './utils';
   // db connection start
   await openMongooseConnection(mongoURIEnvVar);
 
-  // parsing goes here
+  // last update
   const lastUpdate = (await ScraperModel.findOne())?.lastUpdate;
   const lastUpdatedDate = lastUpdate ? new Date(lastUpdate).toLocaleString() : 'N/A - First run';
   Logger.success(`Last Updated ${lastUpdatedDate}`);
+
+  // parse
+  await parseContests();
+  await parseSubmissions();
 
   // update last update time
   await new ScraperModel().save();

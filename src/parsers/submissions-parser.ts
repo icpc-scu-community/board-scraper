@@ -1,21 +1,17 @@
-import { openMongooseConnection, closeMongooseConnection, DuplicateKeyError } from '../database/mongoose';
-import { mongoURIEnvVar, contestsEnvVar } from '../config';
+import { DuplicateKeyError } from '../database/mongoose';
+import { contestsEnvVar } from '../config';
 import { Logger } from '../services/logger';
 import { crawlSubmissions, crawlSubmissionsTotalPages } from '../services/crawler';
 import { ContestType, ContestModel, SubmissionModel } from '../database/models';
 
-(async () => {
-  await openMongooseConnection(mongoURIEnvVar);
-
+export async function parseSubmissions(): Promise<void> {
   const contests: ContestType[] = await ContestModel.find({
     id: { $in: contestsEnvVar.map(({ contestId }) => contestId) },
     groupId: { $in: contestsEnvVar.map(({ groupId }) => groupId) },
   });
   const submissionsParsing = contests.map((contest) => parseContestSubmissions(contest));
   await Promise.all(submissionsParsing);
-
-  await closeMongooseConnection();
-})();
+}
 
 async function parseContestSubmissions(contest: ContestType): Promise<number> {
   const groupId = contest.groupId;

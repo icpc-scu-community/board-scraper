@@ -1,10 +1,10 @@
-import { openMongooseConnection, closeMongooseConnection, DuplicateKeyError } from '../database/mongoose';
-import { mongoURIEnvVar, contestsEnvVar } from '../config';
+import { DuplicateKeyError } from '../database/mongoose';
+import { contestsEnvVar } from '../config';
 import { Logger } from '../services/logger';
 import { crawlContest } from '../services/crawler';
 import { ContestType, ContestModel } from '../database/models';
 
-(async () => {
+export async function parseContests(): Promise<void> {
   // parse
   const contestsParsing = contestsEnvVar.map(({ groupId, contestId }) => parseContest(groupId, contestId));
   const contestsParsingResults = await Promise.allSettled(contestsParsing);
@@ -13,10 +13,8 @@ import { ContestType, ContestModel } from '../database/models';
     .map((promiseResult) => (promiseResult as PromiseFulfilledResult<ContestType>).value);
 
   // save
-  await openMongooseConnection(mongoURIEnvVar);
   await saveContests(successfullyParsedContests);
-  await closeMongooseConnection();
-})();
+}
 
 async function parseContest(groupId: string, contestId: string): Promise<ContestType> {
   const contestIdentifer = `${groupId}/${contestId}`;
