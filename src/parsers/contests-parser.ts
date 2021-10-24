@@ -40,7 +40,7 @@ async function saveContests(contests: ContestType[]): Promise<void> {
 
   try {
     await ContestModel.insertMany(contests, { ordered: false });
-    Logger.success(logEvent, `Contests has been saved successflly, number of created documents: ${contests.length}.`);
+    Logger.success(logEvent, `Contests has been saved successfully, number of created documents: ${contests.length}.`);
   } catch (error) {
     if (error instanceof DuplicateKeyError) {
       Logger.success(

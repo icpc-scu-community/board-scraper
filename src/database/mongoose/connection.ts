@@ -11,7 +11,7 @@ export async function openMongooseConnection(uri: string): Promise<void> {
   try {
     Logger.log(OPEN_CONNECTION_LOG_EVENT, `Trying to connect to MongoDB.`);
     await mongoose.connect(uri);
-    Logger.success(OPEN_CONNECTION_LOG_EVENT, `Succesfuly connected to MongoDB.`);
+    Logger.success(OPEN_CONNECTION_LOG_EVENT, `Successfully connected to MongoDB.`);
   } catch (error) {
     Logger.fail(OPEN_CONNECTION_LOG_EVENT, `Failed to connect to MongoDB.\n${error}`);
     process.exit(1);
@@ -22,7 +22,7 @@ export async function closeMongooseConnection(): Promise<void> {
   try {
     Logger.log(CLOSE_CONNECTION_LOG_EVENT, `Trying to disconnect from MongoDB.`);
     await mongoose.disconnect();
-    Logger.success(CLOSE_CONNECTION_LOG_EVENT, `Succesfuly disconnected from MongoDB.`);
+    Logger.success(CLOSE_CONNECTION_LOG_EVENT, `Successfully disconnected from MongoDB.`);
   } catch (error) {
     Logger.fail(CLOSE_CONNECTION_LOG_EVENT, `Failed to disconnect from MongoDB.\n${error}`);
     process.exit(1);
