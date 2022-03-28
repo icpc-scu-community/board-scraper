@@ -5,6 +5,7 @@ interface SubmissionsCrawlingResult {
   containsPendingSubmissions: boolean;
   submissions: {
     id: string;
+    when: string;
     handle: string;
     problem: string;
     verdict: string;
@@ -22,11 +23,11 @@ export async function crawlSubmissions(
   const containsPendingSubmissions = !!$('td[waiting=true]').text();
   const submissions = $('tr[data-submission-id]')
     .map((_, row) => {
-      const [id, __, handle, problem, ___, verdict] = $(row)
+      const [id, when, handle, problem, ___, verdict] = $(row)
         .children('td')
         .map((_, cell) => $(cell).text().trim())
         .get();
-      return { id, handle, problem, verdict, contestId };
+      return { id, when, handle, problem, verdict, contestId };
     })
     .get();
 
