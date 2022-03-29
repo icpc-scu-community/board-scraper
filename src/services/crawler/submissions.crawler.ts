@@ -23,10 +23,9 @@ export async function crawlSubmissions(
   const containsPendingSubmissions = !!$('td[waiting=true]').text();
   const submissions = $('tr[data-submission-id]')
     .map((_, row) => {
-      const [id, when, handle, problem, ___, verdict] = $(row)
-        .children('td')
-        .map((_, cell) => $(cell).text().trim())
-        .get();
+      let [id, when, handle, problem, __, verdict] = $(row).children('td').get();
+      [id, when, problem, verdict] = [id, when, problem, verdict].map((e) => $(e).text().trim());
+      handle = $(handle).children('a').text().trim();
       return { id, when, handle, problem, verdict, contestId };
     })
     .get();
