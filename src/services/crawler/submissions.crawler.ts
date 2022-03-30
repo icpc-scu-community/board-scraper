@@ -26,6 +26,10 @@ export async function crawlSubmissions(
       let [id, when, handle, problem, __, verdict] = $(row).children('td').get();
       [id, when, problem, verdict] = [id, when, problem, verdict].map((e) => $(e).text().trim());
       handle = $(handle).children('a').text().trim();
+      if (!when.includes('UTC')) {
+        when = `${when} UTC+3`; // MOSCOW time
+      }
+
       return { id, when, handle, problem, verdict, contestId };
     })
     .get();
