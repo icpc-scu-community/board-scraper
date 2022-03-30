@@ -39,6 +39,7 @@ async function saveContests(contests: ContestType[]): Promise<void> {
   }
 
   try {
+    await ContestModel.deleteMany({}); // to force parsing of the contest everytime because we add new problems everyday
     await ContestModel.insertMany(contests, { ordered: false });
     Logger.success(logEvent, `Contests has been saved successfully, number of created documents: ${contests.length}.`);
   } catch (error) {
