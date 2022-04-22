@@ -39,9 +39,18 @@ async function saveContests(contests: ContestType[]): Promise<void> {
   }
 
   try {
-    await ContestModel.deleteMany({}); // to force parsing of the contest everytime because we add new problems everyday
-    await ContestModel.insertMany(contests, { ordered: false });
-    Logger.success(logEvent, `Contests has been saved successfully, number of created documents: ${contests.length}.`);
+    if ((await ContestModel.countDocuments()) === 0) {
+      Logger.log(logEvent, `Inserting ${contests.length} contests.`);
+      await ContestModel.insertMany(contests);
+      Logger.success(
+        logEvent,
+        `Contests has been saved successfully, number of created documents: ${contests.length}.`,
+      );
+    } else {
+      Logger.log(logEvent, `Updating ${contests.length} contests.`);
+      await ContestModel.updateMany({}, { $set: { problems: contests[0].problems } });
+      Logger.success(logEvent);
+    }
   } catch (error) {
     if (error instanceof DuplicateKeyError) {
       Logger.success(
