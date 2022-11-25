@@ -1,4 +1,6 @@
-# Board Scraper
+# Board Scraper <a target="_blank" href="https://kounter.tk"><img align="right" src="https://t.ly/CYgN" /></a>
+
+[![.github/workflows/build.yml](https://github.com/icpc-scu-community/board-scraper/actions/workflows/build.yml/badge.svg)](https://github.com/icpc-scu-community/board-scraper/actions/workflows/build.yml) ![](https://img.shields.io/badge/contributions-welcome-green)
 
 ## Motivation
 
