@@ -25,7 +25,6 @@ ICPC training communites create [codefroces](https://codeforces.com/) groups for
 - Update the values of the `.env` files as follow:
   - `MONGO_URI` is the MongoDB URI connection URI.
   - `CONTESTS` is a list of `groupId/contestId` pairs to be scraped separated by `,`.
-  - `RCPC_COOKIE` (optional) is a value used to bypass the codeforces redirection (workaround).
 - Finally, run the scraper:
 
   ```bash
