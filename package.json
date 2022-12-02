@@ -20,6 +20,7 @@
     "@typegoose/typegoose": "9.12",
     "@types/node": "^18.11.9",
     "cheerio": "^1.0.0-rc.12",
+    "codeforces-rcpc": "^1.0.2",
     "dotenv": "^16.0.3",
     "got": "^11.8.5",
     "mongodb": "^4.12.1",
