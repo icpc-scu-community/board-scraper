@@ -1,19 +1,7 @@
-import { closeMongooseConnection, openMongooseConnection, MetadataModel } from './database';
-import { parseContests, parseSubmissions } from './parsers';
-import { handleCodeforcesRedirection } from './services/redirection';
-import { Timer } from './services/Timer';
+import cron from 'node-cron';
+import { cronExpressionEnvVar } from './config';
+import { scrape } from './scraper';
+import { startServer } from './server';
 
-(async () => {
-  Timer.start()
-    .then(openMongooseConnection)
-    .then(handleCodeforcesRedirection)
-    .then(parseContests)
-    .then(parseSubmissions)
-    .finally(updateMetadata)
-    .finally(closeMongooseConnection)
-    .finally(Timer.stop);
-})();
-
-async function updateMetadata(): Promise<void> {
-  await MetadataModel.create({});
-}
+startServer();
+cron.schedule(cronExpressionEnvVar, scrape);

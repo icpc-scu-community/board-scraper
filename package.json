@@ -26,11 +26,13 @@
     "got": "^11.8.5",
     "mongodb": "^4.12.1",
     "mongoose": "^6.6.0",
+    "node-cron": "^3.0.2",
     "spinnies": "^0.5.1"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.31",
     "@types/express": "^4.17.14",
+    "@types/node-cron": "^3.0.6",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
     "eslint": "^8.28.0",
