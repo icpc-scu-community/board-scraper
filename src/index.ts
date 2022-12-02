@@ -1,7 +1,16 @@
-import cron from 'node-cron';
-import { cronExpressionEnvVar } from './config';
+import express from 'express';
+import { portEnvVar } from './config';
 import { scrape } from './scraper';
-import { startServer } from './server';
+import { Logger } from './services/logger';
 
-startServer();
-cron.schedule(cronExpressionEnvVar, scrape);
+const app = express();
+const port = portEnvVar || 3000;
+
+app.disable('x-powered-by');
+app.get('/', (_, res) => {
+  scrape();
+  res.send();
+});
+app.use('*', (_, res) => res.status(403).send());
+
+app.listen(port, () => Logger.success(`Dump server listening on port ${port}`));
