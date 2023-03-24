@@ -1,17 +1,16 @@
-import { closeMongooseConnection, openMongooseConnection, MetadataModel } from './database';
-import { parseContests, parseSubmissions } from './parsers';
-import { Timer } from './services/Timer';
+import express from 'express';
+import { portEnvVar } from './config';
+import { scrape } from './scraper';
+import { Logger } from './services/logger';
 
-(async () => {
-  Timer.start()
-    .then(openMongooseConnection)
-    .then(parseContests)
-    .then(parseSubmissions)
-    .finally(updateMetadata)
-    .finally(closeMongooseConnection)
-    .finally(Timer.stop);
-})();
+const app = express();
+const port = portEnvVar || 3000;
 
-async function updateMetadata(): Promise<void> {
-  await MetadataModel.create({});
-}
+app.disable('x-powered-by');
+app.get('/', (_, res) => {
+  scrape();
+  res.send();
+});
+app.use('*', (_, res) => res.status(403).send());
+
+app.listen(port, () => Logger.success(`Dump server listening on port ${port}`));
