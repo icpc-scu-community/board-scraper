@@ -10,7 +10,7 @@ export async function crawlContest(groupId: string, contestId: string): Promise<
   const url = getContestPageUrl(groupId, contestId);
   const $ = await crawl(url);
 
-  const name = $('#sidebar div:nth-child(3) a').text().trim();
+  const name = $('#sidebar > div:nth-child(6) tr:nth-child(1)  a').text().trim();
   const problems = $('.problems')
     .find('tr:not(:first-child)')
     .get()
