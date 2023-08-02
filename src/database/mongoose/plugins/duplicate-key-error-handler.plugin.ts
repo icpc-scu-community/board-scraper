@@ -1,4 +1,4 @@
-import { MongoError, MongoBulkWriteError } from 'mongodb';
+import { MongoBulkWriteError, MongoError } from 'mongodb';
 import { Document, Schema } from 'mongoose';
 import { DuplicateKeyError } from '../errors';
 
@@ -9,7 +9,7 @@ function handleE11000(error: Error, _: Document, next: (e?: Error) => void) {
     if ((error as MongoError).code === DUPLICATE_KEY_ERROR_CODE) {
       const duplicateKeyError = new DuplicateKeyError(error.message);
       if (error.name === MongoBulkWriteError.name) {
-        duplicateKeyError.nInserted = (error as MongoBulkWriteError).result.result.nInserted;
+        duplicateKeyError.nInserted = (error as MongoBulkWriteError).result.insertedCount;
       }
       next(duplicateKeyError);
     } else {
@@ -22,7 +22,6 @@ function handleE11000(error: Error, _: Document, next: (e?: Error) => void) {
 
 export default function (schema: Schema): void {
   schema.post('save', handleE11000);
-  schema.post('update', handleE11000);
   schema.post('findOneAndUpdate', handleE11000);
   schema.post('insertMany', handleE11000);
 }
